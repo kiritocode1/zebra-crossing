@@ -1,6 +1,9 @@
-import { Context, Next } from "hono";
+import type { Context, Next } from "hono";
 import { getConnInfo } from "hono/cloudflare-workers";
 
+
+
+type ReturnHonoType = (c: Context, next: Next) => Promise<Response |undefined>;
 /**
  * ZebraCrossing - A rate-limiting middleware for Hono using Deno KV for storage.
  *
@@ -26,10 +29,10 @@ import { getConnInfo } from "hono/cloudflare-workers";
  *
  * @returns {Function} - A middleware function that enforces rate limits based on client IP.
  */
-export const ZebraCrossing = (options: { windowMs: number; maxRequests: number }) => {
+export const ZebraCrossing = (options: { windowMs: number; maxRequests: number }):ReturnHonoType =>   {
 	const { windowMs, maxRequests } = options;
 
-	return async (c: Context, next: Next) => {
+	return async   (c: Context, next: Next) => {
 		// Open a connection to Deno KV
 		const kv = await Deno.openKv();
 
